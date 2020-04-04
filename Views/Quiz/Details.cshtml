@@ -4,10 +4,20 @@
 }
 
 
-<h1>Quiz @Model.Name</h1>
+<h1>@Model.Name</h1>
 
-@if (Model.Questions != null) {
-@foreach(var question in Model.Questions) {
-    <p>@question.QuestionContent</p>
+@if (Model.Questions != null && Model.Questions.Any()) {
+
+    <table class="table table-bordered table-hover">
+    @foreach(var question in Model.Questions) {
+        <tr>
+            <td>@question.QuestionContent</td>
+        </tr>
+    }
+    </table>
+} else {
+    <p>There aren't any questions yet!</p>
 }
-}
+
+
+@Html.ActionLink("Add question", "Add", "Questions", new {id = Model.Id}, new {@class = "btn btn-primary"})

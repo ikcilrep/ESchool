@@ -44,24 +44,7 @@ namespace ESchool.Controllers
             return View(_context.Quizzes.Include(q => q.Questions).First(q => q.Id == id));
         }
 
-        [Route("Quiz/{id}/Questions/Add")]
-        [Authorize]
-        public IActionResult AddQuestion(int id)
-        {
-            return View();
-        }
-
-        [Route("Quiz/{id}/Questions/Add")]
-        [Authorize]
-        [HttpPost]
-        public IActionResult AddQuestion(int id, Question question)
-        {
-            var quiz = _context.Quizzes.First(q => q.Id == id);
-            question.Quiz = quiz;
-            _context.Question.Add(question);
-            _context.SaveChanges(); 
-            return Redirect("/Quiz/Details/" + id);
-        }
+       
 
 
     }
