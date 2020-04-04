@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Security.Claims;
 using ESchool.Data;
 using ESchool.Models;
@@ -17,7 +19,9 @@ namespace ESchool.Controllers
             _context = context;
         }
 
-        public IActionResult Add() {
+        [Authorize]
+        public IActionResult Add()
+        {
             return View();
         }
 
@@ -28,7 +32,14 @@ namespace ESchool.Controllers
             quiz.Owner = CurrentUser;
             _context.Add(quiz);
             _context.SaveChanges();
-            return View();
+            return Redirect("Details/"+quiz.Id);
+        }
+
+        [Authorize]
+
+        public IActionResult Details(int id)
+        {
+            return View(_context.Quizzes.First(q => q.Id == id));
         }
     }
 }

@@ -9,6 +9,7 @@ namespace ESchool.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public DbSet<Quiz> Quizzes {get; set;}
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
