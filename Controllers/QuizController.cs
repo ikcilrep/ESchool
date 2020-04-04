@@ -17,13 +17,13 @@ namespace ESchool.Controllers
             _context = context;
         }
 
-        public IActionResult Index() {
+        public IActionResult Add() {
             return View();
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Index(Quiz quiz)
+        public IActionResult Add(Quiz quiz)
         {
             quiz.Owner = CurrentUser;
             _context.Add(quiz);
