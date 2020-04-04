@@ -8,6 +8,8 @@
 {
     <table class="table table-bordered table-hover">
         <tr><td>Quiz name</td><td>@Html.EditorFor(e => e.Name)</td></tr>
+        <tr><td>@Html.LabelFor(e => e.Start)</td><td>@Html.EditorFor(e => e.Start)</td></tr>
+        <tr><td>@Html.LabelFor(e => e.Finish)</td><td>@Html.EditorFor(e => e.Finish)</td></tr>
     </table>
     <input type="submit" class="btn btn-success" value="Add"/>
 }
