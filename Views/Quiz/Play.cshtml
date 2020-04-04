@@ -1,0 +1,15 @@
+@model ESchool.Models.Question
+@{
+    ViewData["Title"] = "Quiz";
+}
+
+<h1>@Model.QuestionContent</h1>
+@using(Html.BeginForm()) {
+<ul>
+    <li>@Html.EditorFor(e => e.IsAnswer1Correct) A. @Model.Answer1 </li>
+    <li>@Html.EditorFor(e => e.IsAnswer2Correct) B. @Model.Answer2</li>
+    <li>@Html.EditorFor(e => e.IsAnswer3Correct) C. @Model.Answer3</li>
+    <li>@Html.EditorFor(e => e.IsAnswer4Correct) D. @Model.Answer4</li>
+</ul>
+<input type="submit" class="btn btn-dark" value="Ok">
+}

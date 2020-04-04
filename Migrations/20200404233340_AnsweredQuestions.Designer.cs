@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESchool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200404214805_ManyCorrectAnswers")]
-    partial class ManyCorrectAnswers
+    [Migration("20200404233340_AnsweredQuestions")]
+    partial class AnsweredQuestions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,9 @@ namespace ESchool.Migrations
                     b.Property<DateTime>("Joined")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Points")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("QuizId")
                         .HasColumnType("INTEGER");
 
@@ -42,7 +45,7 @@ namespace ESchool.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Participant");
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("ESchool.Models.Question", b =>
@@ -75,6 +78,9 @@ namespace ESchool.Migrations
                     b.Property<bool>("IsAnswer4Correct")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ParticipantId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("QuestionContent")
                         .HasColumnType("TEXT");
 
@@ -82,6 +88,8 @@ namespace ESchool.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParticipantId");
 
                     b.HasIndex("QuizId");
 
@@ -94,10 +102,16 @@ namespace ESchool.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("Finish")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Start")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -305,7 +319,7 @@ namespace ESchool.Migrations
 
             modelBuilder.Entity("ESchool.Models.Participant", b =>
                 {
-                    b.HasOne("ESchool.Models.Quiz", null)
+                    b.HasOne("ESchool.Models.Quiz", "Quiz")
                         .WithMany("Participants")
                         .HasForeignKey("QuizId");
 
@@ -316,6 +330,10 @@ namespace ESchool.Migrations
 
             modelBuilder.Entity("ESchool.Models.Question", b =>
                 {
+                    b.HasOne("ESchool.Models.Participant", null)
+                        .WithMany("AnsweredQuestions")
+                        .HasForeignKey("ParticipantId");
+
                     b.HasOne("ESchool.Models.Quiz", "Quiz")
                         .WithMany("Questions")
                         .HasForeignKey("QuizId");

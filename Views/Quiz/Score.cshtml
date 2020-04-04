@@ -1,0 +1,9 @@
+@model ESchool.Models.Participant;
+@{
+    ViewData["Title"] = "Your score!";
+}
+
+<h1>Your score in quiz @Model.Quiz.Name</h1>
+@{var time = (Model.Submitted - Model.Joined).Seconds;}
+<h3>Time: @time</h3>
+<h3>Points: @Model.Points / @Model.Quiz.Questions.Count</h3>

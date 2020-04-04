@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ESchool.Migrations
 {
-    public partial class ManyCorrectAnswers : Migration
+    public partial class AnsweredQuestions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -159,7 +159,9 @@ namespace ESchool.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
-                    OwnerId = table.Column<string>(nullable: true)
+                    OwnerId = table.Column<string>(nullable: true),
+                    Start = table.Column<DateTime>(nullable: false),
+                    Finish = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,7 +175,7 @@ namespace ESchool.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Participant",
+                name: "Participants",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -181,19 +183,20 @@ namespace ESchool.Migrations
                     UserId = table.Column<string>(nullable: true),
                     Joined = table.Column<DateTime>(nullable: false),
                     Submitted = table.Column<DateTime>(nullable: false),
-                    QuizId = table.Column<int>(nullable: true)
+                    QuizId = table.Column<int>(nullable: true),
+                    Points = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Participant", x => x.Id);
+                    table.PrimaryKey("PK_Participants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participant_Quizzes_QuizId",
+                        name: "FK_Participants_Quizzes_QuizId",
                         column: x => x.QuizId,
                         principalTable: "Quizzes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Participant_AspNetUsers_UserId",
+                        name: "FK_Participants_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -215,11 +218,18 @@ namespace ESchool.Migrations
                     IsAnswer2Correct = table.Column<bool>(nullable: false),
                     IsAnswer3Correct = table.Column<bool>(nullable: false),
                     IsAnswer4Correct = table.Column<bool>(nullable: false),
-                    QuizId = table.Column<int>(nullable: true)
+                    QuizId = table.Column<int>(nullable: true),
+                    ParticipantId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_Participants_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Participants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Questions_Quizzes_QuizId",
                         column: x => x.QuizId,
@@ -266,14 +276,19 @@ namespace ESchool.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_QuizId",
-                table: "Participant",
+                name: "IX_Participants_QuizId",
+                table: "Participants",
                 column: "QuizId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_UserId",
-                table: "Participant",
+                name: "IX_Participants_UserId",
+                table: "Participants",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questions_ParticipantId",
+                table: "Questions",
+                column: "ParticipantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_QuizId",
@@ -304,13 +319,13 @@ namespace ESchool.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Participant");
-
-            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Participants");
 
             migrationBuilder.DropTable(
                 name: "Quizzes");

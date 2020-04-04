@@ -69,6 +69,83 @@ namespace ESchool.Controllers
             return NotFound();
         }
 
+        [Authorize]
+        public IActionResult Play(int id)
+        {
+            var question = _context.Questions.First(q => q.Id == id);
+            var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
+            if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
+            {
+                CurrentParticipant(quiz);
+                return View(question);
+            }
+            return NotFound();
+        }
+
+        private Participant CurrentParticipant(Quiz quiz)
+        {
+            if (!quiz.Participants.Any(p => p.User == CurrentUser))
+            {
+                var participant = new Participant { User = CurrentUser, Joined = DateTime.Now, Quiz = quiz };
+                _context.Participants.Add(participant);
+                _context.SaveChanges();
+                return _context.Participants.Include(p => p.AnsweredQuestions).First(p => p.Id == participant.Id);
+            }
+            return _context.Participants.Include(p => p.AnsweredQuestions).Include(p => p.Quiz).First(p => p.Quiz == quiz && p.User == CurrentUser);
+        }
+
+        [Authorize]
+        public IActionResult Score(int id)
+        {
+            var participant = _context.Participants.First(p => p.Id == id);
+            var quiz = _context.Quizzes.Include(q => q.Questions)
+                                       .Include(q => q.Participants)
+                                       .First(q => q.Participants.Contains(participant));
+            return View(participant);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Play(int id, Question answeredQuestion)
+        {
+            var question = _context.Questions.First(q => q.Id == id);
+            var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
+            if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
+            {
+                var participant = CurrentParticipant(quiz);
+
+                var participantToUpdate = _context.Participants.First(p => p.Id == participant.Id);
+                if (!participant.AnsweredQuestions.Contains(question))
+                {
+                    participant.AnsweredQuestions.Add(question);
+                    _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
+                    _context.SaveChanges();
+
+                    if (question.IsAnswer1Correct == answeredQuestion.IsAnswer1Correct
+                        && question.IsAnswer2Correct == answeredQuestion.IsAnswer2Correct
+                        && question.IsAnswer3Correct == answeredQuestion.IsAnswer3Correct
+                        && question.IsAnswer4Correct == answeredQuestion.IsAnswer4Correct)
+                    {
+                        participant.Points++;
+                        _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
+                        _context.SaveChanges();
+                    }
+                }
+
+                if (quiz.Questions.Any(q => !participant.AnsweredQuestions.Contains(q)))
+                {
+                    var nextQuestion = quiz.Questions.First(q => !participant.AnsweredQuestions.Contains(q));
+                    return Redirect("Play/" + nextQuestion.Id);
+                }
+                participant.Submitted = DateTime.Now;
+                _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
+                _context.SaveChanges();
+
+
+                return Redirect("/Quiz/Score/" + participant.Id);
+            }
+            return NotFound();
+        }
 
 
 

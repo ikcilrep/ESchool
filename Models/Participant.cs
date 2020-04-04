@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace ESchool.Models
@@ -9,5 +10,11 @@ namespace ESchool.Models
         public IdentityUser User { get; set; }
         public DateTime Joined { get; set; }
         public DateTime Submitted { get; set; }
+
+        public Quiz Quiz { get; set; }
+
+        public int Points { get; set; }
+
+        public List<Question> AnsweredQuestions { get; set; }
     }
 }
