@@ -1,5 +1,8 @@
+using System.Security.Claims;
 using ESchool.Data;
 using ESchool.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESchool.Controllers
@@ -7,16 +10,21 @@ namespace ESchool.Controllers
     public class QuizController : Controller
     {
         public ApplicationDbContext _context { get; set; }
+        private IdentityUser CurrentUser => _context.Users.Find(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         public QuizController(ApplicationDbContext context)
         {
             _context = context;
         }
 
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Index(Question question)
+        public IActionResult Index(Quiz quiz)
         {
-            _context.Add(question);
+            quiz.Owner = CurrentUser;
+            _context.Add(quiz);
+            _context.SaveChanges();
             return View();
         }
     }
