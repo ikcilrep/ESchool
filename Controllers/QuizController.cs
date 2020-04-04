@@ -77,7 +77,14 @@ namespace ESchool.Controllers
             if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
             {
                 CurrentParticipant(quiz);
-                return View(question);
+                return View(new Question
+                {
+                    QuestionContent = question.QuestionContent,
+                    Answer1 = question.Answer1,
+                    Answer2 = question.Answer2,
+                    Answer3 = question.Answer3,
+                    Answer4 = question.Answer4
+                });
             }
             return NotFound();
         }
