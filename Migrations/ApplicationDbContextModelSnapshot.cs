@@ -3,16 +3,14 @@ using System;
 using ESchool.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ESchool.Data.Migrations
+namespace ESchool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200404193500_Fix")]
-    partial class Fix
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +74,7 @@ namespace ESchool.Data.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("ESchool.Models.Quiz", b =>

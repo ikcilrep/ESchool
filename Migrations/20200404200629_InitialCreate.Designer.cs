@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ESchool.Data.Migrations
+namespace ESchool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200404185629_OneToManyQuiz")]
-    partial class OneToManyQuiz
+    [Migration("20200404200629_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,7 +76,7 @@ namespace ESchool.Data.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("ESchool.Models.Quiz", b =>

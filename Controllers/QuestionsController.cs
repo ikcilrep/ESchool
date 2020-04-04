@@ -26,8 +26,9 @@ namespace ESchool.Models
         {
             var quiz = _context.Quizzes.First(q => q.Id == id);
             question.Quiz = quiz;
-            _context.Question.Add(question);
-            _context.SaveChanges(); 
+            question.Id = _context.Questions.Max(q => q.Id) + 1;
+            _context.Add<Question>(question);
+            _context.SaveChanges();
             return Redirect("/Quiz/Details/" + id);
         }
 
