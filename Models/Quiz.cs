@@ -8,9 +8,9 @@ namespace ESchool.Models
         public string Name { get; set; }
         public IdentityUser Owner { get; set; }
 
-        public List<Question> questions { get; set; }
+        public List<Question> Questions { get; set; }
 
-        public List<Participant> participants { get; set; }
+        public List<Participant> Participants { get; set; }
 
     }
 }
