@@ -1,6 +1,8 @@
 using System.Linq;
+using System.Security.Claims;
 using ESchool.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,9 @@ namespace ESchool.Models
 {
     public class QuestionsController : Controller
     {
+
+        private IdentityUser CurrentUser => _context.Users.Find(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         public ApplicationDbContext _context;
 
         public QuestionsController(ApplicationDbContext context)
@@ -26,17 +31,27 @@ namespace ESchool.Models
         public IActionResult Add(int id, Question question)
         {
             var quiz = _context.Quizzes.First(q => q.Id == id);
-            question.Quiz = quiz;
-            question.Id = _context.Questions.Max(q => q.Id) + 1;
-            _context.Add<Question>(question);
-            _context.SaveChanges();
-            return Redirect("/Quiz/Details/" + id);
+            if (CurrentUser == quiz.Owner)
+            {
+                question.Quiz = quiz;
+                question.Id = _context.Questions.Max(q => q.Id) + 1;
+                _context.Add<Question>(question);
+                _context.SaveChanges();
+                return Redirect("/Quiz/Details/" + id);
+            }
+            return NotFound();
         }
 
         [Authorize]
         public IActionResult Edit(int id)
         {
-            return View(_context.Questions.First(q => q.Id == id));
+
+            var quiz = GetQuizFromQuestionId(id);
+            if (CurrentUser == quiz.Owner)
+            {
+                return View(_context.Questions.First(q => q.Id == id));
+            }
+            return NotFound();
         }
 
         [Authorize]
@@ -48,8 +63,15 @@ namespace ESchool.Models
             question.Quiz = questionToEdit.Quiz;
             _context.Entry(questionToEdit).CurrentValues.SetValues(question);
             _context.SaveChanges();
-            var quizId = _context.Quizzes.Include(q => q.Questions).First(q => q.Questions.Any(qu => qu.Id == id)).Id;
+            var quizId = GetQuizFromQuestionId(id).Id;
             return Redirect("/Quiz/Details/" + quizId);
+        }
+
+        private Quiz GetQuizFromQuestionId(int id)
+        {
+            return _context.Quizzes.Include(q => q.Questions)
+                                   .Include(q => q.Owner)
+                                   .First(q => q.Questions.Any(qu => qu.Id == id));
         }
     }
 }

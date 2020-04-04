@@ -41,10 +41,15 @@ namespace ESchool.Controllers
 
         public IActionResult Details(int id)
         {
-            return View(_context.Quizzes.Include(q => q.Questions).First(q => q.Id == id));
+            var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Owner).First(q => q.Id == id);
+            if (quiz.Owner == CurrentUser)
+            {
+                return View(quiz);
+            }
+            return NotFound();
         }
 
-       
+
 
 
     }
