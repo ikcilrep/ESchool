@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using ESchool.Data;
@@ -6,6 +7,7 @@ using ESchool.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESchool.Controllers
 {
@@ -32,14 +34,35 @@ namespace ESchool.Controllers
             quiz.Owner = CurrentUser;
             _context.Add(quiz);
             _context.SaveChanges();
-            return Redirect("Details/"+quiz.Id);
+            return Redirect("Details/" + quiz.Id);
         }
 
         [Authorize]
 
         public IActionResult Details(int id)
         {
-            return View(_context.Quizzes.First(q => q.Id == id));
+            return View(_context.Quizzes.Include(q => q.Questions).First(q => q.Id == id));
         }
+
+        [Route("Quiz/{id}/Questions/Add")]
+        [Authorize]
+        public IActionResult AddQuestion(int id)
+        {
+            return View();
+        }
+
+        [Route("Quiz/{id}/Questions/Add")]
+        [Authorize]
+        [HttpPost]
+        public IActionResult AddQuestion(int id, Question question)
+        {
+            var quiz = _context.Quizzes.First(q => q.Id == id);
+            question.Quiz = quiz;
+            _context.Question.Add(question);
+            _context.SaveChanges(); 
+            return Redirect("/Quiz/Details/" + id);
+        }
+
+
     }
 }

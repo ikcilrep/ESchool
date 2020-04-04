@@ -16,5 +16,7 @@ namespace ESchool.Models
         public string Answer4 { get; set; }
 
         public int CorrectAnswer { get; set; }
+
+        public Quiz Quiz { get; set; }
     }
 }

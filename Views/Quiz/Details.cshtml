@@ -5,3 +5,9 @@
 
 
 <h1>Quiz @Model.Name</h1>
+
+@if (Model.Questions != null) {
+@foreach(var question in Model.Questions) {
+    <p>@question.QuestionContent</p>
+}
+}
