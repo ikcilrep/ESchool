@@ -58,10 +58,15 @@ namespace ESchool.Controllers
         public IActionResult Remove(int id)
         {
             var quiz = _context.Quizzes.First(q => q.Id == id);
-            _context.Questions.RemoveRange(_context.Questions.Where(q => q.Quiz == quiz));
-            _context.Quizzes.Remove(quiz);
-            _context.SaveChanges();
-            return View();
+            if (CurrentUser == quiz.Owner)
+            {
+                _context.Questions.RemoveRange(_context.Questions.Where(q => q.Quiz == quiz));
+                _context.Quizzes.Remove(quiz);
+                _context.SaveChanges();
+
+                return View();
+            }
+            return NotFound();
         }
 
 
