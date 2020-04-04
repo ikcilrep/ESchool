@@ -1,0 +1,10 @@
+@model ESchool.Models.Question
+
+@{
+    ViewData["Title"] = "Edit question";
+}
+
+@using(Html.BeginForm()) {
+<partial name="_QuestionEditorPartial"/>
+<input type="submit" class="btn btn-success" value="Save changes"/>
+}

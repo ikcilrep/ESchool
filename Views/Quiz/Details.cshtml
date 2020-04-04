@@ -12,6 +12,7 @@
     @foreach(var question in Model.Questions) {
         <tr>
             <td>@question.QuestionContent</td>
+            <td>@Html.ActionLink("Edit", "Edit", "Questions", new {id = question.Id}, new {@class = "btn btn-dark"})</td>
         </tr>
     }
     </table>
