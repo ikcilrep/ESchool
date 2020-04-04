@@ -1,0 +1,17 @@
+@model IEnumerable<ESchool.Models.Quiz>
+@{
+    ViewData["Quizes"] = "Your quizes";
+}
+
+@if (Model.Count() == 1) {
+<h1>Your quiz:</h1>
+} else if (Model.Count() > 1) {
+<h1>Your quizzes:</h1>
+}
+@foreach(var quiz in Model) {
+<ul class="list-group list-group-flush">
+    <li class="list-group-item">
+        @Html.ActionLink(quiz.Name, "Details", "Quiz", new {id = quiz.Id})
+    </li>
+</ul>
+}

@@ -26,6 +26,18 @@ namespace ESchool.Models
             return View();
         }
 
+        private int NewQuestionId
+        {
+            get
+            {
+                if (_context.Questions.Any())
+                {
+                    return _context.Questions.Max(q => q.Id) + 1;
+                }
+                return 0;
+            }
+        }
+
         [Authorize]
         [HttpPost]
         public IActionResult Add(int id, Question question)
@@ -34,7 +46,7 @@ namespace ESchool.Models
             if (CurrentUser == quiz.Owner)
             {
                 question.Quiz = quiz;
-                question.Id = _context.Questions.Max(q => q.Id) + 1;
+                question.Id = NewQuestionId;
                 _context.Add<Question>(question);
                 _context.SaveChanges();
                 return Redirect("/Quiz/Details/" + id);
