@@ -1,8 +1,23 @@
 @model ESchool.Models.Question
 <table class="table table-bordered table-hover">
-        <tr><td>Question</td><td>@Html.EditorFor(e => e.QuestionContent)</td></tr>
-        <tr><td>Answer A</td><td>@Html.EditorFor(e => e.Answer1)</td></tr>
-        <tr><td>Answer B</td><td>@Html.EditorFor(e => e.Answer2)</td></tr>
-        <tr><td>Answer C</td><td>@Html.EditorFor(e => e.Answer3)</td></tr>
-        <tr><td>Answer D</td><td>@Html.EditorFor(e => e.Answer4)</td></tr>
+        <tr>
+                <td>Question</td><td>@Html.EditorFor(e => e.QuestionContent)</td>
+                <td>Correct answer</td>
+        </tr>
+        <tr>
+                <td>Answer A</td><td>@Html.EditorFor(e => e.Answer1)</td>
+                <td>@Html.EditorFor(e => e.IsAnswer1Correct)</td>
+        </tr>
+        <tr>
+                <td>Answer B</td><td>@Html.EditorFor(e => e.Answer2)</td>
+                <td>@Html.EditorFor(e => e.IsAnswer2Correct)</td>
+        </tr>
+        <tr>
+                <td>Answer C</td><td>@Html.EditorFor(e => e.Answer3)</td>
+                <td>@Html.EditorFor(e => e.IsAnswer3Correct)</td>
+        </tr>
+        <tr>
+                <td>Answer D</td><td>@Html.EditorFor(e => e.Answer4)</td>
+                <td>@Html.EditorFor(e => e.IsAnswer4Correct)</td>
+        </tr>
 </table>

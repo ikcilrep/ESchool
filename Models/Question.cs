@@ -15,7 +15,10 @@ namespace ESchool.Models
 
         public string Answer4 { get; set; }
 
-        public int CorrectAnswer { get; set; }
+        public bool IsAnswer1Correct {get;set;}
+        public bool IsAnswer2Correct {get;set;}
+        public bool IsAnswer3Correct {get;set;}
+        public bool IsAnswer4Correct {get;set;}
 
         public Quiz Quiz { get; set; }
     }

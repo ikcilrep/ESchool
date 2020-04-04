@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESchool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200404200629_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200404214805_ManyCorrectAnswers")]
+    partial class ManyCorrectAnswers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -63,7 +63,16 @@ namespace ESchool.Migrations
                     b.Property<string>("Answer4")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CorrectAnswer")
+                    b.Property<bool>("IsAnswer1Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer2Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer3Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer4Correct")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("QuestionContent")

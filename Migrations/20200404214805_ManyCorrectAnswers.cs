@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ESchool.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class ManyCorrectAnswers : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -211,7 +211,10 @@ namespace ESchool.Migrations
                     Answer2 = table.Column<string>(nullable: true),
                     Answer3 = table.Column<string>(nullable: true),
                     Answer4 = table.Column<string>(nullable: true),
-                    CorrectAnswer = table.Column<int>(nullable: false),
+                    IsAnswer1Correct = table.Column<bool>(nullable: false),
+                    IsAnswer2Correct = table.Column<bool>(nullable: false),
+                    IsAnswer3Correct = table.Column<bool>(nullable: false),
+                    IsAnswer4Correct = table.Column<bool>(nullable: false),
                     QuizId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

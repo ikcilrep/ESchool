@@ -61,7 +61,16 @@ namespace ESchool.Migrations
                     b.Property<string>("Answer4")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CorrectAnswer")
+                    b.Property<bool>("IsAnswer1Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer2Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer3Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsAnswer4Correct")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("QuestionContent")
