@@ -17,6 +17,9 @@ namespace ESchool.Controllers
             _context = context;
         }
 
+        public IActionResult Index() {
+            return View();
+        }
 
         [Authorize]
         [HttpPost]
