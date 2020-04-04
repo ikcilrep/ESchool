@@ -1,0 +1,10 @@
+@model ESchool.Models.Question
+
+
+<table class="table table-bordered table-hover">
+        <tr><td>Question</td><td>@Html.EditorFor(e => e.QuestionContent)</td></tr>
+        <tr><td>Answer A</td><td>@Html.EditorFor(e => e.Answer1)</td></tr>
+        <tr><td>Answer B</td><td>@Html.EditorFor(e => e.Answer2)</td></tr>
+        <tr><td>Answer C</td><td>@Html.EditorFor(e => e.Answer3)</td></tr>
+        <tr><td>Answer D</td><td>@Html.EditorFor(e => e.Answer4)</td></tr>
+</table>
