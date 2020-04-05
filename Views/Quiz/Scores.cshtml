@@ -1,4 +1,4 @@
-@model IEnumerable<ESchool.Models.Quiz>
+@model IEnumerable<Tuple<Participant, Quiz>>
 @{
     ViewData["Title"] = "Your scores";
 }
@@ -12,17 +12,17 @@
     </tr>
   </thead>
   <tbody>
-    @foreach (var quiz in Model) 
+    @foreach (var tuple in Model) 
     {
         <tr>
             <td>
-                @Html.ActionLink(quiz.Name, "Score", "Quiz", new {id = quiz.Id})
+                @Html.ActionLink(tuple.Item2.Name, "Score", "Quiz", new {id = tuple.Item1.Id})
             </td>
             <td>
-                @quiz.Start
+                @tuple.Item2.Start
             </td>
             <td>
-                @quiz.Finish
+                @tuple.Item2.Finish
             </td>
         </tr>
     }

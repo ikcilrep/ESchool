@@ -87,7 +87,7 @@ namespace ESchool.Controllers
             var participant = CurrentParticipant(quiz);
             if (participant.AnsweredQuestions.Contains(question))
             {
-                return Redirect("/Quiz/Score/" + quiz.Id);
+                return Redirect("/Quiz/Score/" + participant.Id);
             }
             return View(new Question
             {
@@ -114,11 +114,15 @@ namespace ESchool.Controllers
         [Authorize]
         public IActionResult Score(int id)
         {
-            var participant = _context.Participants.First(p => p.Quiz.Id == id && p.User == CurrentUser);
-            var quiz = _context.Quizzes.Include(q => q.Questions)
-                                       .Include(q => q.Participants)
-                                       .First(q => q.Participants.Contains(participant));
-            return View(participant);
+            var participant = _context.Participants.Include(q => q.User)
+                                                   .Include(q => q.Quiz)
+                                                   .Include(q => q.AnsweredQuestions)
+                                                   .First(p => p.Id == id);
+            if (participant.User == CurrentUser || participant.Quiz.Owner == CurrentUser)
+            {
+                return View(participant);
+            }
+            return NotFound();
         }
 
 
@@ -169,13 +173,16 @@ namespace ESchool.Controllers
             _context.SaveChanges();
 
 
-            return Redirect("/Quiz/Score/" + quiz.Id);
+            return Redirect("/Quiz/Score/" + participant.Id);
         }
 
         [Authorize]
         public IActionResult Scores()
         {
-            var quizzes = _context.Quizzes.Include(q => q.Participants).Where(q => q.Participants.Any(p => p.User == CurrentUser));
+            var quizzes = _context.Quizzes.Include(q => q.Participants)
+                                          .Where(q => q.Participants.Any(p => p.User == CurrentUser))
+                                          .Select(q => new Tuple<Participant, Quiz>(_context.Participants.Include(p => p.Quiz)
+                                                                                                         .First(p => p.Quiz == q && p.User == CurrentUser), q));
             return View(quizzes);
         }
 
