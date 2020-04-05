@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    @foreach (var tuple in Model) 
+    @foreach (var tuple in Model.OrderBy(m => m.Item2.Start)) 
     {
         <tr>
             <td>
