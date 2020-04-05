@@ -96,7 +96,6 @@ namespace ESchool.Controllers
                 var participant = new Participant { User = CurrentUser, Joined = DateTime.Now, Quiz = quiz };
                 _context.Participants.Add(participant);
                 _context.SaveChanges();
-                return _context.Participants.Include(p => p.AnsweredQuestions).First(p => p.Id == participant.Id);
             }
             return _context.Participants.Include(p => p.AnsweredQuestions).Include(p => p.Quiz).First(p => p.Quiz == quiz && p.User == CurrentUser);
         }
@@ -139,6 +138,7 @@ namespace ESchool.Controllers
                         participant.Points++;
                         _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
                         _context.SaveChanges();
+                        participantToUpdate = participant;
                     }
                 }
 
