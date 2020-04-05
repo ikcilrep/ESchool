@@ -14,3 +14,41 @@
     <tr><td>Points</td><td>@Model.Points / @Model.Quiz.Questions.Count</td></tr>
     <tr><td>Percentage score</td><td>@percentage</td></tr>
 </table>
+
+@if (Model.Quiz.Finish <= DateTime.Now) {
+    <h2>Correct answers:</h2>
+    <table class="table table-bordered table-hover">
+        @foreach (var question in Model.AnsweredQuestions) {
+            <tr>
+                <td>
+                    @question.QuestionContent
+                </td>
+                @if (question.IsAnswer1Correct) {
+                <td>
+                    A. @question.Answer1
+                </td>
+                }
+                @if (question.IsAnswer2Correct) {
+                <td>
+                    B. @question.Answer2
+                </td>
+                }
+
+                @if (question.IsAnswer3Correct) {
+                <td>
+                    C. @question.Answer3
+                </td>
+                }
+
+                @if (question.IsAnswer4Correct) {
+                <td>
+                    D. @question.Answer4
+                </td>
+                }
+
+            </tr>
+       }
+    </table>
+} else {
+    <h2>Correct answers will be here at @Model.Quiz.Finish, wait patiently.</h2>
+}
