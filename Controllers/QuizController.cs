@@ -76,7 +76,11 @@ namespace ESchool.Controllers
             var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
             if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
             {
-                CurrentParticipant(quiz);
+                var participant = CurrentParticipant(quiz);
+                if (participant.AnsweredQuestions.Contains(question))
+                {
+                    return Redirect("/Quiz/Score/" + participant.Id);
+                }
                 return View(new Question
                 {
                     QuestionContent = question.QuestionContent,
