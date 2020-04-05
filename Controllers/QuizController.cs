@@ -132,7 +132,10 @@ namespace ESchool.Controllers
         public IActionResult Play(int id, Question answeredQuestion)
         {
             var question = _context.Questions.First(q => q.Id == id);
-            var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
+            var quiz = _context.Quizzes.Include(q => q.Questions)
+                                       .Include(q => q.Participants)
+                                       .ThenInclude(p => p.User)
+                                       .First(q => q.Questions.Contains(question));
             if (quiz.Finish <= DateTime.Now)
             {
                 return View("QuizHasFinished");
