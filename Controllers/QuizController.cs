@@ -90,7 +90,7 @@ namespace ESchool.Controllers
                     Answer4 = question.Answer4
                 });
             }
-            return NotFound();
+            return View("QuizHasFinished");
         }
 
         private Participant CurrentParticipant(Quiz quiz)
@@ -158,7 +158,13 @@ namespace ESchool.Controllers
 
                 return Redirect("/Quiz/Score/" + participant.Id);
             }
-            return NotFound();
+            
+            if (_context.Participants.Any(p => p.Quiz == quiz && p.User == CurrentUser))
+            {
+
+                return Redirect("/Quiz/Score/" + _context.Participants.First(p => p.Quiz == quiz && p.User == CurrentUser).Id);
+            }
+            return View("QuizHasFinished");
         }
 
 

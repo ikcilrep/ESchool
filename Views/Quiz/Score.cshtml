@@ -17,7 +17,7 @@
 
 @if (Model.Quiz.Finish <= DateTime.Now) {
     <h2>Correct answers:</h2>
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-dark">
         @foreach (var question in Model.AnsweredQuestions) {
             <tr>
                 <td>
