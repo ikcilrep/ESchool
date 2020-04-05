@@ -1,0 +1,30 @@
+@model IEnumerable<ESchool.Models.Quiz>
+@{
+    ViewData["Title"] = "Your scores";
+}
+
+<table class="table table-bordered table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Start</th>
+      <th scope="col">Finish</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var quiz in Model) 
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(quiz.Name, "Score", "Quiz", new {id = quiz.Id})
+            </td>
+            <td>
+                @quiz.Start
+            </td>
+            <td>
+                @quiz.Finish
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
