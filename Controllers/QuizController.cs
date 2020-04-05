@@ -61,6 +61,7 @@ namespace ESchool.Controllers
             if (CurrentUser == quiz.Owner)
             {
                 _context.Questions.RemoveRange(_context.Questions.Where(q => q.Quiz == quiz));
+                _context.Participants.RemoveRange(_context.Participants.Where(q => q.Quiz == quiz));
                 _context.Quizzes.Remove(quiz);
                 _context.SaveChanges();
 
