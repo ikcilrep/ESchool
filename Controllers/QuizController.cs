@@ -74,23 +74,29 @@ namespace ESchool.Controllers
         {
             var question = _context.Questions.First(q => q.Id == id);
             var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
-            if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
+            if (quiz.Finish <= DateTime.Now)
             {
-                var participant = CurrentParticipant(quiz);
-                if (participant.AnsweredQuestions.Contains(question))
-                {
-                    return Redirect("/Quiz/Score/" + quiz.Id);
-                }
-                return View(new Question
-                {
-                    QuestionContent = question.QuestionContent,
-                    Answer1 = question.Answer1,
-                    Answer2 = question.Answer2,
-                    Answer3 = question.Answer3,
-                    Answer4 = question.Answer4
-                });
+                return View("QuizHasFinished");
             }
-            return View("QuizHasFinished");
+
+            if (quiz.Start > DateTime.Now)
+            {
+                return View("QuizHasntStarted", quiz.Start);
+            }
+
+            var participant = CurrentParticipant(quiz);
+            if (participant.AnsweredQuestions.Contains(question))
+            {
+                return Redirect("/Quiz/Score/" + quiz.Id);
+            }
+            return View(new Question
+            {
+                QuestionContent = question.QuestionContent,
+                Answer1 = question.Answer1,
+                Answer2 = question.Answer2,
+                Answer3 = question.Answer3,
+                Answer4 = question.Answer4
+            });
         }
 
         private Participant CurrentParticipant(Quiz quiz)
@@ -123,48 +129,47 @@ namespace ESchool.Controllers
         {
             var question = _context.Questions.First(q => q.Id == id);
             var quiz = _context.Quizzes.Include(q => q.Questions).Include(q => q.Participants).First(q => q.Questions.Contains(question));
-            if (quiz.Finish > DateTime.Now && quiz.Start < DateTime.Now)
+            if (quiz.Finish <= DateTime.Now)
             {
-                var participant = CurrentParticipant(quiz);
+                return View("QuizHasFinished");
+            }
 
-                var participantToUpdate = _context.Participants.First(p => p.Id == participant.Id);
-                if (!participant.AnsweredQuestions.Contains(question))
-                {
-                    participant.AnsweredQuestions.Add(question);
-                    _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
-                    _context.SaveChanges();
+            if (quiz.Start > DateTime.Now)
+            {
+                return View("QuizHasntStarted", quiz.Start);
+            }
+            var participant = CurrentParticipant(quiz);
 
-                    if (question.IsAnswer1Correct == answeredQuestion.IsAnswer1Correct
-                        && question.IsAnswer2Correct == answeredQuestion.IsAnswer2Correct
-                        && question.IsAnswer3Correct == answeredQuestion.IsAnswer3Correct
-                        && question.IsAnswer4Correct == answeredQuestion.IsAnswer4Correct)
-                    {
-                        participant.Points++;
-                        _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
-                        _context.SaveChanges();
-                        participantToUpdate = participant;
-                    }
-                }
-
-                if (quiz.Questions.Any(q => !participant.AnsweredQuestions.Contains(q)))
-                {
-                    var nextQuestion = quiz.Questions.First(q => !participant.AnsweredQuestions.Contains(q));
-                    return Redirect("/Quiz/Play/" + nextQuestion.Id);
-                }
-                participant.Submitted = DateTime.Now;
+            var participantToUpdate = _context.Participants.First(p => p.Id == participant.Id);
+            if (!participant.AnsweredQuestions.Contains(question))
+            {
+                participant.AnsweredQuestions.Add(question);
                 _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
                 _context.SaveChanges();
 
-
-                return Redirect("/Quiz/Score/" + quiz.Id);
+                if (question.IsAnswer1Correct == answeredQuestion.IsAnswer1Correct
+                    && question.IsAnswer2Correct == answeredQuestion.IsAnswer2Correct
+                    && question.IsAnswer3Correct == answeredQuestion.IsAnswer3Correct
+                    && question.IsAnswer4Correct == answeredQuestion.IsAnswer4Correct)
+                {
+                    participant.Points++;
+                    _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
+                    _context.SaveChanges();
+                    participantToUpdate = participant;
+                }
             }
 
-            if (_context.Participants.Any(p => p.Quiz == quiz && p.User == CurrentUser))
+            if (quiz.Questions.Any(q => !participant.AnsweredQuestions.Contains(q)))
             {
-
-                return Redirect("/Quiz/Score/" + _context.Quizzes.Include(q => q.Participants).First(q => q.Participants.Any(p => p.User == CurrentUser)).Id);
+                var nextQuestion = quiz.Questions.First(q => !participant.AnsweredQuestions.Contains(q));
+                return Redirect("/Quiz/Play/" + nextQuestion.Id);
             }
-            return View("QuizHasFinished");
+            participant.Submitted = DateTime.Now;
+            _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
+            _context.SaveChanges();
+
+
+            return Redirect("/Quiz/Score/" + quiz.Id);
         }
 
         [Authorize]

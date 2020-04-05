@@ -9,8 +9,10 @@
     var formattedtime = time.Hours + "h " + time.Minutes + "min " + time.Seconds + "s"; 
     var percentage = Math.Round((((double)Model.Points)/Model.Quiz.Questions.Count) * 100, 2) + "%";
 }
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-hover table-striped">
     <tr><td>Time</td><td>@formattedtime</td></tr>
+    <tr><td>Joined</td><td>@Model.Joined</td></tr>
+    <tr><td>Submitted</td><td>@Model.Submitted</td></tr>
     <tr><td>Points</td><td>@Model.Points / @Model.Quiz.Questions.Count</td></tr>
     <tr><td>Percentage score</td><td>@percentage</td></tr>
 </table>
