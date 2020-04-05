@@ -79,7 +79,7 @@ namespace ESchool.Controllers
                 var participant = CurrentParticipant(quiz);
                 if (participant.AnsweredQuestions.Contains(question))
                 {
-                    return Redirect("/Quiz/Score/" + participant.Id);
+                    return Redirect("/Quiz/Score/" + quiz.Id);
                 }
                 return View(new Question
                 {
@@ -108,7 +108,7 @@ namespace ESchool.Controllers
         [Authorize]
         public IActionResult Score(int id)
         {
-            var participant = _context.Participants.First(p => p.Id == id);
+            var participant = _context.Participants.First(p => p.Quiz.Id == id && p.User == CurrentUser);
             var quiz = _context.Quizzes.Include(q => q.Questions)
                                        .Include(q => q.Participants)
                                        .First(q => q.Participants.Contains(participant));
@@ -156,17 +156,23 @@ namespace ESchool.Controllers
                 _context.SaveChanges();
 
 
-                return Redirect("/Quiz/Score/" + participant.Id);
+                return Redirect("/Quiz/Score/" + quiz.Id);
             }
-            
+
             if (_context.Participants.Any(p => p.Quiz == quiz && p.User == CurrentUser))
             {
 
-                return Redirect("/Quiz/Score/" + _context.Participants.First(p => p.Quiz == quiz && p.User == CurrentUser).Id);
+                return Redirect("/Quiz/Score/" + _context.Quizzes.Include(q => q.Participants).First(q => q.Participants.Any(p => p.User == CurrentUser)).Id);
             }
             return View("QuizHasFinished");
         }
 
+        [Authorize]
+        public IActionResult Scores()
+        {
+            var quizzes = _context.Quizzes.Include(q => q.Participants).Where(q => q.Participants.Any(p => p.User == CurrentUser));
+            return View(quizzes);
+        }
 
 
     }
