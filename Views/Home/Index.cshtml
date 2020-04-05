@@ -4,5 +4,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome!</h1>
+    @if (User.Identity.IsAuthenticated) {
     @Html.ActionLink("Create a new quiz.", "Add", "Quiz", null,new {@class="btn btn-primary"})
+    } else {
+        <h3>Log in to begin.</h3>
+    }
+
+
 </div>
