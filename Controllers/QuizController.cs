@@ -101,6 +101,7 @@ namespace ESchool.Controllers
             return _context.Participants.Include(p => p.AnsweredQuestions).Include(p => p.Quiz).First(p => p.Quiz == quiz && p.User == CurrentUser);
         }
 
+
         [Authorize]
         public IActionResult Score(int id)
         {
@@ -110,6 +111,8 @@ namespace ESchool.Controllers
                                        .First(q => q.Participants.Contains(participant));
             return View(participant);
         }
+
+
 
         [Authorize]
         [HttpPost]
@@ -142,7 +145,7 @@ namespace ESchool.Controllers
                 if (quiz.Questions.Any(q => !participant.AnsweredQuestions.Contains(q)))
                 {
                     var nextQuestion = quiz.Questions.First(q => !participant.AnsweredQuestions.Contains(q));
-                    return Redirect("Play/" + nextQuestion.Id);
+                    return Redirect("/Quiz/Play/" + nextQuestion.Id);
                 }
                 participant.Submitted = DateTime.Now;
                 _context.Entry(participantToUpdate).CurrentValues.SetValues(participant);
