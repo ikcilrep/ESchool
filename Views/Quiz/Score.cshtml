@@ -4,6 +4,13 @@
 }
 
 <h1>Your score in quiz @Model.Quiz.Name</h1>
-@{var time = (Model.Submitted - Model.Joined).Seconds;}
-<h3>Time: @time</h3>
-<h3>Points: @Model.Points / @Model.Quiz.Questions.Count</h3>
+@{
+    var time = Model.Submitted - Model.Joined;
+    var formattedtime = time.Hours + "h " + time.Minutes + "min " + time.Seconds + "s"; 
+    var percentage = Math.Round((((double)Model.Points)/Model.Quiz.Questions.Count) * 100, 2) + "%";
+}
+<table class="table table-bordered table-hover">
+    <tr><td>Time</td><td>@formattedtime</td></tr>
+    <tr><td>Points</td><td>@Model.Points / @Model.Quiz.Questions.Count</td></tr>
+    <tr><td>Percentage score</td><td>@percentage</td></tr>
+</table>
