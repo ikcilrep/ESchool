@@ -18,7 +18,7 @@
         </tr>
     }
     </table>
-    var playLink = Url.ActionLink("Play", "Quiz", new {id = null});
+    var playLink = Url.ActionLink("Play", "Quiz", new {id = Model.Questions.First().Id});
     <p>
         Podziel się swoim quizem: <a href=@playLink>@playLink</a>
     </p>
